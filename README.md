@@ -182,12 +182,5 @@ The app will automatically open in your default browser at `http://localhost:850
 *   **No Diagnosis:** The app explicitly states (via System Prompt) that it provides *guidance*, not medical diagnoses.
 *   **Bias Awareness:** We acknowledge that the training datasets (e.g., PIMA) may have demographic biases.
 
-## 18. Interview Explanation (Cheat Sheet)
-**"Tell me about the most challenging part of this project."**
-> "The biggest challenge was the **Data Fusion** layer. I had to design a system that takes unstructured text (user questions), real-time continuous time-series data (from the 'watch'), and static profile data, and merge them into a single context for the prompt. I solved this by building a dedicated `analysis_service` that orchestrates these different data types before they reach the LLM."
-
-**"What makes your AI Agents 'Agents' and not just scripts?"**
-> "The Planner Agent is a true agent because it reasons. It doesn't just print a template; it looks at the rain, looks at my steps, 'thinks' about the safety trade-offs, and *then* constructs a unique plan. It has a Perception-Reasoning-Action loop."
-
-## 19. Conclusion
+## 18. Conclusion
 The AI Health Coach demonstrates the power of **Agentic AI** in healthcare. By moving from "Reactive" treatment to "Proactive" monitoring, we can improve quality of life using accessible technology.

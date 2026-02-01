@@ -5,10 +5,15 @@ import os
 from dotenv import load_dotenv
 load_dotenv()  # loads .env file
 
-MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+# Check Streamlit secrets first (for Cloud), then env vars (for Local)
+if "MISTRAL_API_KEY" in st.secrets:
+    MISTRAL_API_KEY = st.secrets["MISTRAL_API_KEY"]
+else:
+    MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 
 if not MISTRAL_API_KEY:
-    raise ValueError("MISTRAL_API_KEY not found in .env file")
+    st.error("MISTRAL_API_KEY not found. Please set it in .env (local) or Secrets (cloud).")
+    st.stop()
 # Add backend directory to path so imports work
 sys.path.append(os.path.join(os.path.dirname(__file__), 'backend'))
 import time
@@ -100,12 +105,14 @@ st.markdown("""
     color: white;
     line-height: 1.2;
     margin-bottom: 15px;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.9); /* READABILITY FIX */
 }
 .hero-desc {
     font-size: 18px;
-    color: #94a3b8;
+    color: #e0e7ff; /* Whiter text for better contrast */
     max-width: 500px;
     line-height: 1.6;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.8); /* READABILITY FIX */
 }
 
 /* Input Fields - Dark Theme */
@@ -148,7 +155,10 @@ div[data-testid="stForm"] {
     border: none !important;
     flex: 1;
     text-align: center;
+    text-align: center;
     justify-content: center;
+    font-weight: 500; /* Bolder tabs */
+    color: #cbd5e1; /* Lighter gray for visibility */
 }
 .stTabs [aria-selected="true"] {
     background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%) !important;
@@ -158,21 +168,22 @@ div[data-testid="stForm"] {
 }
 
 /* Primary Button */
-button[kind="primary"] {
-    background: linear-gradient(90deg, #22d3ee 0%, #0ea5e9 100%);
-    border: none;
-    height: 52px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 16px;
-    color: #0f172a !important; /* Dark text on bright button */
-    margin-top: 15px;
-    width: 100%;
-    transition: all 0.3s;
+/* Primary Button - Strict Override */
+div.stButton > button:first-child {
+    background: linear-gradient(90deg, #22d3ee 0%, #0ea5e9 100%) !important;
+    border: none !important;
+    height: 52px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    color: #0f172a !important;
+    width: 100% !important;
+    transition: all 0.3s !important;
 }
-button[kind="primary"]:hover {
+div.stButton > button:first-child:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
+    box-shadow: 0 10px 25px rgba(34, 211, 238, 0.4) !important;
+    color: #0f172a !important;
 }
 
 /* Helper Text */
@@ -486,7 +497,10 @@ def get_unified_wellness_inputs(profile, form_inputs, device_connected):
 
 def login_page():
     # Load background image
+    # Load background image
     import base64
+    
+    @st.cache_data # CACHE THIS HEAVY OP
     def get_base64_of_bin_file(bin_file):
         try:
             with open(bin_file, 'rb') as f:
@@ -529,10 +543,9 @@ def login_page():
         # Note: CSS now targets div[data-testid="column"]:nth-of-type(3) for the card look
         
         # Header inside card
+        # REMOVED DUPLICATE TITLE HERE FOR CLEANER LOOK
         st.markdown("""
-        <div style="text-align:center; padding-top: 20px; margin-bottom:10px;">
-            <div style="font-size:24px; font-weight:700; color:white;">AI Health Coach</div>
-            <div style="font-size:16px; color:#cbe; margin-top:5px; margin-bottom: 25px;">A Mini Doctor in Your Pocket</div>
+        <div style="text-align:center; padding-top: 10px; margin-bottom:10px;">
         </div>
         """, unsafe_allow_html=True)
 

@@ -12,3 +12,6 @@ pdfplumber
 plotly
 bcrypt
 lightgbm
+fastapi
+uvicorn
+python-multipart
